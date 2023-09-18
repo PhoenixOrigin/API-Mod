@@ -14,5 +14,5 @@ jobs:
       id: setup-gradle
       with:
         gradle-version: release-candidate
-    - run: gradle build --dry-run # just test build configuration
-    - run: echo "The release-candidate version was ${{ steps.setup-gradle.outputs.gradle-version }}"
+        arguments: shadowJar
+        
