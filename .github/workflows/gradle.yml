@@ -33,5 +33,5 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: build
-          path: build/
+          name: API-Mod
+          path: build/libs/API-1.0-SNAPSHOT.jar
