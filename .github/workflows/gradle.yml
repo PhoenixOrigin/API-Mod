@@ -3,7 +3,7 @@ name: Build
 on: push
 
 jobs:
-  format-and-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -29,3 +29,9 @@ jobs:
         with:
           gradle-version: release-candidate
           arguments: buildDependents
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build/
