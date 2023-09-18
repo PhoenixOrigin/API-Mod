@@ -28,10 +28,13 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: release-candidate
-          arguments: buildDependents
+          arguments: build
 
-      - name: Upload build
-        uses: actions/upload-artifact@v3
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: API-Mod
-          path: build/libs/API-1.0-SNAPSHOT.jar
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Dev Build"
+          files: |
+            build/libs/API-1.0-SNAPSHOT.jar
