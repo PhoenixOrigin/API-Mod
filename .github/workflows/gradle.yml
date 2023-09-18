@@ -1,19 +1,18 @@
-name: Run Gradle on PRs
-on: push
+name: Test latest Gradle RC
+on:
+  push
 jobs:
   gradle:
-    strategy:
-      matrix:
-        os: [windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - uses: actions/setup-java@v3
       with:
         distribution: temurin
         java-version: 17
-        
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-    
-    - name: Execute Gradle build
-      run: ./gradlew build
+    - uses: gradle/gradle-build-action@v2
+      id: setup-gradle
+      with:
+        gradle-version: release-candidate
+    - run: gradle build --dry-run # just test build configuration
+    - run: echo "The release-candidate version was ${{ steps.setup-gradle.outputs.gradle-version }}"
