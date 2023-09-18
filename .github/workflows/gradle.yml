@@ -30,11 +30,7 @@ jobs:
           gradle-version: release-candidate
           arguments: build
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: actions/upload-artifact@v3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Dev Build"
-          files: |
-            build/libs/API-1.0-SNAPSHOT.jar
+          name: API-Mod
+          path: build/libs/API-?.?-*.jar
