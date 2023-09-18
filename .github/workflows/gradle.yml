@@ -1,18 +1,20 @@
 name: Test latest Gradle RC
 on:
   push
-jobs:   
+jobs:
   gradle:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout project sources
-      uses: actions/checkout@v3
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-    - name: Run build with Gradle wrapper
-      run: ./gradlew build --scan
-    - name: Upload build reports
-      uses: actions/upload-artifact@v3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
       with:
-        name: build-reports
-        path: build/reports/
+        distribution: temurin
+        java-version: 17
+    
+    - name: Setup and execute Gradle 'test' task
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: test
