@@ -17,4 +17,4 @@ jobs:
       id: setup-gradle
     
     - name: Execute Gradle build
-      run: ./gradlew shadowJar
+    - run: gradle shadowJar
