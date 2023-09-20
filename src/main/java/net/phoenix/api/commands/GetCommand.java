@@ -34,24 +34,26 @@ public class GetCommand {
                     String res = response.getAsString();
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
-                        ctx.getSource().sendFeedback(Text.literal(response.getAsString()));
+                        ctx.getSource().sendFeedback(Text.literal(res);
                     });
                 });
             } else {
                 String url = API.config.get("url") + path;
                 RequestHandler.get(url, player, uuid, response -> {
+                    String res = response.getAsString();
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
-                        ctx.getSource().sendFeedback(Text.literal(response.getAsString()));
+                        ctx.getSource().sendFeedback(Text.literal(res);
                     });
                 });
             }
         } catch (IllegalArgumentException ignored) {
             String url = API.config.get("url");
             RequestHandler.get(url, player, uuid, response -> {
+                String res = response.getAsString();
                 MinecraftClient client = MinecraftClient.getInstance();
                 client.execute(() -> {
-                    ctx.getSource().sendFeedback(Text.literal(response.getAsString()));
+                    ctx.getSource().sendFeedback(Text.literal(res);
                 });
             });
         }
