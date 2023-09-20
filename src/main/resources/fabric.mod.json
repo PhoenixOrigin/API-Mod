@@ -2,25 +2,29 @@
   "schemaVersion": 1,
   "id": "api",
   "version": "${version}",
-
   "name": "API",
   "description": "",
   "authors": [],
-  "contact": {},
-
+  "contact": {
+    "repo": "https://github.com/PhoenixOrigin/API"
+  },
   "license": "All-Rights-Reserved",
   "icon": "assets/api/icon.png",
-
   "environment": "*",
-  "entrypoints": {},
-
-      "mixins": [
-        "api.mixins.json"
-      ],
-
+  "entrypoints": {
+    "client": [
+      "net.phoenix.api.client.APIClient"
+    ],
+    "main": [
+      "net.phoenix.api.API"
+    ]
+  },
+  "mixins": [
+    "api.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-        "fabric": "*",
+    "fabric": "*",
     "minecraft": "${minecraft_version}"
   }
 }

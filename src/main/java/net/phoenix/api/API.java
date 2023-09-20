@@ -18,6 +18,6 @@ public class API implements ModInitializer {
             dispatcher.register(new GetCommand().build());
             dispatcher.register(new PostCommand().build());
         });
-        
+
     }
 }

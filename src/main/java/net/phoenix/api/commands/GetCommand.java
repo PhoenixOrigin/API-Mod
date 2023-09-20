@@ -28,7 +28,7 @@ public class GetCommand {
                 MinecraftClient.getInstance().player.sendMessage(Text.literal(response.getAsString()));
             });
         } else {
-
+            
         }
 
 
