@@ -34,7 +34,7 @@ public class GetCommand {
                     String res = response.getAsString();
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
-                        ctx.getSource().sendFeedback(Text.literal(res);
+                        ctx.getSource().sendFeedback(Text.literal(res));
                     });
                 });
             } else {
@@ -43,7 +43,7 @@ public class GetCommand {
                     String res = response.getAsString();
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
-                        ctx.getSource().sendFeedback(Text.literal(res);
+                        ctx.getSource().sendFeedback(Text.literal(res));
                     });
                 });
             }
@@ -53,7 +53,7 @@ public class GetCommand {
                 String res = response.getAsString();
                 MinecraftClient client = MinecraftClient.getInstance();
                 client.execute(() -> {
-                    ctx.getSource().sendFeedback(Text.literal(res);
+                    ctx.getSource().sendFeedback(Text.literal(res));
                 });
             });
         }
