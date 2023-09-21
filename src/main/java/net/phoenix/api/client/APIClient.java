@@ -26,14 +26,15 @@ public class APIClient implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        client = MinecraftClient.getInstance();
-        username = client.player.getName().getString();
-        uuid =  client.player.getUuidAsString();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(new GetCommand().build());
             dispatcher.register(new PostCommand().build());
         });
+
+        client = MinecraftClient.getInstance();
+        username = client.player.getName().getString();
+        uuid =  client.player.getUuidAsString();
 
         config = SimpleConfig.of("settings").request();
         try {
