@@ -54,27 +54,23 @@ public class APIClient implements ClientModInitializer {
         }
 
         ClientSendMessageEvents.CHAT.register((message) -> {
-            String token = config.get("token");
-            MinecraftClient client = MinecraftClient.getInstance();
-            String username = client.player.getName().getString();
-            String uuid =  client.player.getUuidAsString();
-
-            websocket.send(String.format("""
-                    {
-                      "wsToken": %s,
-                      "username": %s,
-                      "uuid": %s,
-                      "message": %s
-                    }
-                    """, token, username, uuid, message));
+            handleText(Text.literal(message));
+        });
+        ClientReceiveMessageEvents.GAME.register((message, gameListener) -> {
+            handleText(message);
         });
         ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> {
-            String token = config.get("token");
-            MinecraftClient client = MinecraftClient.getInstance();
-            String username = client.player.getName().getString();
-            String uuid =  client.player.getUuidAsString();
+            handleText(message);
+        }));
+    }
 
-            websocket.send(String.format("""
+    private void handleText(Text message) {
+        String token = config.get("token");
+        MinecraftClient client = MinecraftClient.getInstance();
+        String username = client.player.getName().getString();
+        String uuid =  client.player.getUuidAsString();
+
+        websocket.send(String.format("""
                     {
                       "wsToken": %s,
                       "username": %s,
@@ -82,6 +78,5 @@ public class APIClient implements ClientModInitializer {
                       "message": %s
                     }
                     """, token, username, uuid, message));
-        }));
     }
 }
