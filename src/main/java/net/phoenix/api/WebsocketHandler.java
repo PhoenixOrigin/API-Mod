@@ -1,98 +1,69 @@
 package net.phoenix.api;
 
-import javax.websocket.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.handshake.ServerHandshake;
+
 import java.net.URI;
-import java.nio.ByteBuffer;
+import java.util.Map;
 
-@ClientEndpoint
-public class WebsocketHandler {
+public class WebsocketHandler extends WebSocketClient {
 
-    private boolean disconnected = true;
-    private final URI endpointURI;
-    Session userSession = null;
-    private MessageHandler messageHandler;
+    private MessageHandler messageHandler = null;
+    public boolean dc = false;
 
-    public WebsocketHandler(URI endpointURI) {
-        this.endpointURI = endpointURI;
+    public WebsocketHandler(URI serverUri, Draft draft) {
+        super(serverUri, draft);
     }
 
-    /**
-     * Connect to websocket
-     */
-    public void connect(){
-        disconnected = false;
-        try {
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, this.endpointURI);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public WebsocketHandler(URI serverURI) {
+        super(serverURI);
     }
 
-    /**
-     * Callback hook for Connection open events.
-     *
-     * @param userSession the userSession which is opened.
-     */
-    @OnOpen
-    public void onOpen(Session userSession) {
-        this.userSession = userSession;
+    public WebsocketHandler(URI serverUri, Map<String, String> httpHeaders) {
+        super(serverUri, httpHeaders);
     }
 
-    /**
-     * Callback hook for Connection close events.
-     *
-     * @param userSession the userSession which is getting closed.
-     * @param reason      the reason for connection close
-     */
-    @OnClose
-    public void onClose(Session userSession, CloseReason reason) {
-        this.userSession = null;
-        if (disconnected) return;
-        connect();
+    @Override
+    public void onOpen(ServerHandshake handshakedata) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.execute(() -> {
+            if(client.player != null) {
+                client.player.sendMessage(Text.literal("Connected to websocket"));
+            }
+        });
     }
 
-    /**
-     * Callback hook for Message Events. This method will be invoked when a client send a message.
-     *
-     * @param message The text message
-     */
-    @OnMessage
+    @Override
     public void onMessage(String message) {
-        if (this.messageHandler != null) {
-            this.messageHandler.handleMessage(message);
-        }
+        messageHandler.handleMessage(message);
     }
 
-    @OnMessage
-    public void onMessage(ByteBuffer bytes) {
-        System.out.print(bytes);
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.execute(() -> {
+            if(client.player != null) {
+                client.player.sendMessage(Text.literal("Disconnected from websocket"));
+            }
+        });
+        if(!dc) return;
+        super.connect();
     }
 
-    /**
-     * register message handler
-     *
-     * @param msgHandler
-     */
-    public void setMessageHandler(MessageHandler msgHandler) {
-        this.messageHandler = msgHandler;
+    @Override
+    public void onError(Exception ex) {
+        ex.printStackTrace();
     }
 
-    /**
-     * Send a message.
-     *
-     * @param message
-     */
-    public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
-    /**
-     * Message handler.
-     *
-     */
-    public static interface MessageHandler {
-
-        public void handleMessage(String message);
+    public abstract static class MessageHandler {
+        public abstract void handleMessage(String message);
     }
+
 }

@@ -34,13 +34,16 @@ public class APIClient implements ClientModInitializer {
             URI uri = new URI(config.get("ws-url"));
             websocket = new WebsocketHandler(uri);
             websocket.connect();
-            websocket.setMessageHandler(message -> {
-                MinecraftClient client = MinecraftClient.getInstance();
-                client.execute(() -> {
-                    try {
-                        client.player.sendMessage(Text.literal(message));
-                    } catch (NullPointerException ignored){}
-                });
+            websocket.setMessageHandler(new WebsocketHandler.MessageHandler() {
+                @Override
+                public void handleMessage(String message) {
+                    MinecraftClient client = MinecraftClient.getInstance();
+                    client.execute(() -> {
+                        try {
+                            client.player.sendMessage(Text.literal(message));
+                        } catch (NullPointerException ignored){}
+                    });
+                }
             });
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -52,7 +55,7 @@ public class APIClient implements ClientModInitializer {
             String username = client.player.getName().getString();
             String uuid =  client.player.getUuidAsString();
 
-            websocket.sendMessage(String.format("""
+            websocket.send(String.format("""
                     {
                       "wsToken": %s,
                       "username": %s,
@@ -67,7 +70,7 @@ public class APIClient implements ClientModInitializer {
             String username = client.player.getName().getString();
             String uuid =  client.player.getUuidAsString();
 
-            websocket.sendMessage(String.format("""
+            websocket.send(String.format("""
                     {
                       "wsToken": %s,
                       "username": %s,
