@@ -1,14 +1,19 @@
 package net.phoenix.api.client;
 
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.text.Text;
 import net.phoenix.api.WebsocketHandler;
 import net.phoenix.api.commands.GetCommand;
 import net.phoenix.api.commands.PostCommand;
+import net.phoenix.api.commands.WebsocketCommand;
 import net.phoenix.api.utils.SimpleConfig;
 
 import java.net.URI;
@@ -27,6 +32,8 @@ public class APIClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(new GetCommand().build());
             dispatcher.register(new PostCommand().build());
+            LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(new WebsocketCommand().build());
+            dispatcher.register(ClientCommandManager.literal("ws").redirect(node));
         });
 
         config = SimpleConfig.of("httpconfig/settings").request();
