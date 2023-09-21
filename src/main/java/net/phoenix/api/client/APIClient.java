@@ -54,15 +54,12 @@ public class APIClient implements ClientModInitializer {
             throw new RuntimeException(e);
         }
 
-        ClientSendMessageEvents.CHAT.register((message) -> {
-            handleText(Text.literal(message));
-        });
-        ClientReceiveMessageEvents.GAME.register((message, gameListener) -> {
+        ClientSendMessageEvents.CHAT.register((message) -> handleText(Text.literal(message)));
+        ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> handleText(message)));
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (overlay) return;
             handleText(message);
         });
-        ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> {
-            handleText(message);
-        }));
     }
 
     private void handleText(Text message) {
@@ -80,6 +77,6 @@ public class APIClient implements ClientModInitializer {
                   "uuid": %s,
                   "message": %s
                 }
-                """, token, username, uuid, message));
+                """, token, username, uuid, message.getString()));
     }
 }
