@@ -50,7 +50,7 @@ public class WebsocketHandler extends WebSocketClient {
             }
         });
         if(!dc) return;
-        super.connect();
+        super.reconnect();
     }
 
     @Override

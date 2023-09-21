@@ -38,6 +38,10 @@ public class APIClient implements ClientModInitializer {
                 @Override
                 public void handleMessage(String message) {
                     MinecraftClient client = MinecraftClient.getInstance();
+                    if(message.equals("$SERVERPING")) {
+                        websocket.send("$CLIENTPONG");
+                        return;
+                    }
                     client.execute(() -> {
                         try {
                             client.player.sendMessage(Text.literal(message));
