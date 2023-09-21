@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.phoenix.api.API;
 import net.phoenix.api.RequestHandler;
+import net.phoenix.api.client.APIClient;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -21,8 +22,8 @@ public class GetCommand {
     }
 
     private int pathExecute(CommandContext<FabricClientCommandSource> ctx) {
-        String player = ctx.getSource().getPlayer().getName().getString();
-        String uuid = ctx.getSource().getPlayer().getUuidAsString();
+        String player = APIClient.username;
+        String uuid = APIClient.uuid;
         try {
             String path = ctx.getArgument("path", String.class);
             if (RequestHandler.isUrl(path)) {
@@ -34,7 +35,7 @@ public class GetCommand {
                     });
                 });
             } else {
-                String url = API.config.get("url") + path;
+                String url = APIClient.config.get("url") + path;
                 RequestHandler.get(url, player, uuid, res -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
@@ -43,7 +44,7 @@ public class GetCommand {
                 });
             }
         } catch (IllegalArgumentException ignored) {
-            String url = API.config.get("url");
+            String url = APIClient.config.get("url");
             RequestHandler.get(url, player, uuid, res -> {
                 MinecraftClient client = MinecraftClient.getInstance();
                 client.execute(() -> {

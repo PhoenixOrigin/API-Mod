@@ -24,7 +24,7 @@ public class RequestHandler {
                 .thenAcceptAsync(callback);
     }
 
-    public static void post(String url, String json, String player, String uuid, Consumer<? super JsonElement> callback) {
+    public static void post(String url, String json, String player, String uuid, Consumer<? super String> callback) {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .header("Content-Type", "application/json")
@@ -35,7 +35,6 @@ public class RequestHandler {
         HttpClient client = HttpClient.newHttpClient();
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApplyAsync(HttpResponse::body)
-                .thenApplyAsync(JsonParser::parseString)
                 .thenAcceptAsync(callback);
     }
 

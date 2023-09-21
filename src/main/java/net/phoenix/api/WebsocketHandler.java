@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 @ClientEndpoint
 public class WebsocketHandler {
 
+    private boolean disconnected = true;
     private final URI endpointURI;
     Session userSession = null;
     private MessageHandler messageHandler;
@@ -19,6 +20,7 @@ public class WebsocketHandler {
      * Connect to websocket
      */
     public void connect(){
+        disconnected = false;
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, this.endpointURI);
@@ -34,7 +36,6 @@ public class WebsocketHandler {
      */
     @OnOpen
     public void onOpen(Session userSession) {
-        System.out.println("opening websocket");
         this.userSession = userSession;
     }
 
@@ -46,8 +47,8 @@ public class WebsocketHandler {
      */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
-        System.out.println("closing websocket");
         this.userSession = null;
+        if (disconnected) return;
         connect();
     }
 
@@ -65,7 +66,7 @@ public class WebsocketHandler {
 
     @OnMessage
     public void onMessage(ByteBuffer bytes) {
-        System.out.println("Handle byte buffer");
+        System.out.print(bytes);
     }
 
     /**
@@ -73,7 +74,7 @@ public class WebsocketHandler {
      *
      * @param msgHandler
      */
-    public void addMessageHandler(MessageHandler msgHandler) {
+    public void setMessageHandler(MessageHandler msgHandler) {
         this.messageHandler = msgHandler;
     }
 
@@ -89,7 +90,6 @@ public class WebsocketHandler {
     /**
      * Message handler.
      *
-     * @author Jiji_Sasidharan
      */
     public static interface MessageHandler {
 
