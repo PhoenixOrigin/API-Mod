@@ -26,7 +26,7 @@ public class WebsocketCommand {
 
     private int connect(CommandContext<FabricClientCommandSource> ctx) {
         APIClient.websocket.dc = false;
-        APIClient.websocket.reconnect();
+        APIClient.websocket.connect();
         return 0;
     }
 

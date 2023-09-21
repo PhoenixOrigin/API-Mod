@@ -49,7 +49,7 @@ public class WebsocketHandler extends WebSocketClient {
                 client.player.sendMessage(Text.literal("Disconnected from websocket"));
             }
         });
-        if (!dc) return;
+        if (dc) return;
         super.reconnect();
     }
 
