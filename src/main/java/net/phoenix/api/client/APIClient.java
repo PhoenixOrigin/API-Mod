@@ -17,9 +17,6 @@ public class APIClient implements ClientModInitializer {
 
     public static SimpleConfig config = null;
     public static WebsocketHandler websocket = null;
-    public static String username = null;
-    public static String uuid = null;
-    public static MinecraftClient client = null;
 
     /**
      * Runs the mod initializer on the client environment.
@@ -32,10 +29,6 @@ public class APIClient implements ClientModInitializer {
             dispatcher.register(new PostCommand().build());
         });
 
-        client = MinecraftClient.getInstance();
-        username = client.player.getName().getString();
-        uuid =  client.player.getUuidAsString();
-
         config = SimpleConfig.of("settings").request();
         try {
             URI uri = new URI(config.get("ws-url"));
@@ -43,7 +36,11 @@ public class APIClient implements ClientModInitializer {
             websocket.connect();
             websocket.setMessageHandler(message -> {
                 MinecraftClient client = MinecraftClient.getInstance();
-                client.execute(() -> client.player.sendMessage(Text.literal(message)));
+                client.execute(() -> {
+                    try {
+                        client.player.sendMessage(Text.literal(message));
+                    } catch (NullPointerException ignored){}
+                });
             });
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -51,6 +48,9 @@ public class APIClient implements ClientModInitializer {
 
         ClientSendMessageEvents.CHAT.register((message) -> {
             String token = config.get("token");
+            MinecraftClient client = MinecraftClient.getInstance();
+            String username = client.player.getName().getString();
+            String uuid =  client.player.getUuidAsString();
 
             websocket.sendMessage(String.format("""
                     {
@@ -63,6 +63,9 @@ public class APIClient implements ClientModInitializer {
         });
         ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> {
             String token = config.get("token");
+            MinecraftClient client = MinecraftClient.getInstance();
+            String username = client.player.getName().getString();
+            String uuid =  client.player.getUuidAsString();
 
             websocket.sendMessage(String.format("""
                     {

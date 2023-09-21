@@ -22,8 +22,9 @@ public class GetCommand {
     }
 
     private int pathExecute(CommandContext<FabricClientCommandSource> ctx) {
-        String player = APIClient.username;
-        String uuid = APIClient.uuid;
+        MinecraftClient mc = MinecraftClient.getInstance();
+        String player = mc.player.getName().getString();
+        String uuid =  mc.player.getUuidAsString();
         try {
             String path = ctx.getArgument("path", String.class);
             if (RequestHandler.isUrl(path)) {
