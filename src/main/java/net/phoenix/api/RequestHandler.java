@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class RequestHandler {
 
-    public static void get(String url, String player, String uuid, Consumer<? super JsonElement> callback) {
+    public static void get(String url, String player, String uuid, Consumer<? super String> callback) {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .header("X-Minecraft-Username", player)
                 .header("X-Minecraft-UUID", uuid)
