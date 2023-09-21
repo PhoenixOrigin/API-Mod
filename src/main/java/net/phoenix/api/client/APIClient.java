@@ -29,7 +29,7 @@ public class APIClient implements ClientModInitializer {
             dispatcher.register(new PostCommand().build());
         });
 
-        config = SimpleConfig.of("hexa/settings").request();
+        config = SimpleConfig.of("httpconfig/settings").request();
         try {
             URI uri = new URI(config.get("ws-url"));
             websocket = new WebsocketHandler(uri);
