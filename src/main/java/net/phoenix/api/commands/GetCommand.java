@@ -6,7 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.phoenix.api.API;
 import net.phoenix.api.RequestHandler;
 import net.phoenix.api.client.APIClient;
 
@@ -24,7 +23,7 @@ public class GetCommand {
     private int pathExecute(CommandContext<FabricClientCommandSource> ctx) {
         MinecraftClient mc = MinecraftClient.getInstance();
         String player = mc.player.getName().getString();
-        String uuid =  mc.player.getUuidAsString();
+        String uuid = mc.player.getUuidAsString();
         try {
             String path = ctx.getArgument("path", String.class);
             if (RequestHandler.isUrl(path)) {

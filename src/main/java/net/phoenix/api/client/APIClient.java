@@ -2,13 +2,14 @@ package net.phoenix.api.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.phoenix.api.WebsocketHandler;
 import net.phoenix.api.commands.GetCommand;
 import net.phoenix.api.commands.PostCommand;
 import net.phoenix.api.utils.SimpleConfig;
-import net.fabricmc.fabric.api.client.message.v1.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,7 +24,6 @@ public class APIClient implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(new GetCommand().build());
             dispatcher.register(new PostCommand().build());
@@ -38,14 +38,15 @@ public class APIClient implements ClientModInitializer {
                 @Override
                 public void handleMessage(String message) {
                     MinecraftClient client = MinecraftClient.getInstance();
-                    if(message.equals("$SERVERPING")) {
+                    if (message.equals("$SERVERPING")) {
                         websocket.send("$CLIENTPONG");
                         return;
                     }
                     client.execute(() -> {
                         try {
                             client.player.sendMessage(Text.literal(message));
-                        } catch (NullPointerException ignored){}
+                        } catch (NullPointerException ignored) {
+                        }
                     });
                 }
             });
@@ -65,18 +66,20 @@ public class APIClient implements ClientModInitializer {
     }
 
     private void handleText(Text message) {
+        if (websocket.dc) return;
+
         String token = config.get("token");
         MinecraftClient client = MinecraftClient.getInstance();
         String username = client.player.getName().getString();
-        String uuid =  client.player.getUuidAsString();
+        String uuid = client.player.getUuidAsString();
 
         websocket.send(String.format("""
-                    {
-                      "wsToken": %s,
-                      "username": %s,
-                      "uuid": %s,
-                      "message": %s
-                    }
-                    """, token, username, uuid, message));
+                {
+                  "wsToken": %s,
+                  "username": %s,
+                  "uuid": %s,
+                  "message": %s
+                }
+                """, token, username, uuid, message));
     }
 }

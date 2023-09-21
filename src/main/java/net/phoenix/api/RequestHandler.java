@@ -1,8 +1,5 @@
 package net.phoenix.api;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;

@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class WebsocketHandler extends WebSocketClient {
 
-    private MessageHandler messageHandler = null;
     public boolean dc = false;
+    private MessageHandler messageHandler = null;
 
     public WebsocketHandler(URI serverUri, Draft draft) {
         super(serverUri, draft);
@@ -30,7 +30,7 @@ public class WebsocketHandler extends WebSocketClient {
     public void onOpen(ServerHandshake handshakedata) {
         MinecraftClient client = MinecraftClient.getInstance();
         client.execute(() -> {
-            if(client.player != null) {
+            if (client.player != null) {
                 client.player.sendMessage(Text.literal("Connected to websocket"));
             }
         });
@@ -45,11 +45,11 @@ public class WebsocketHandler extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         MinecraftClient client = MinecraftClient.getInstance();
         client.execute(() -> {
-            if(client.player != null) {
+            if (client.player != null) {
                 client.player.sendMessage(Text.literal("Disconnected from websocket"));
             }
         });
-        if(!dc) return;
+        if (!dc) return;
         super.reconnect();
     }
 
