@@ -21,7 +21,6 @@ public class RequestHandler {
         HttpClient client = HttpClient.newHttpClient();
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApplyAsync(HttpResponse::body)
-                .thenApplyAsync(JsonParser::parseString)
                 .thenAcceptAsync(callback);
     }
 
