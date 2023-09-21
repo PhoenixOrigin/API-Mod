@@ -79,10 +79,10 @@ public class APIClient implements ClientModInitializer {
 
         websocket.send(String.format("""
                 {
-                  "wsToken": %s,
-                  "username": %s,
-                  "uuid": %s,
-                  "message": %s
+                  "wsToken": "%s",
+                  "username": "%s",
+                  "uuid": "%s",
+                  "message": "%s"
                 }
                 """, token, username, uuid, message.copy().toString()));
     }
