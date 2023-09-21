@@ -64,7 +64,7 @@ public class APIClient implements ClientModInitializer {
                       "wsToken": %s,
                       "username": %s,
                       "uuid": %s,
-                      "message": %s (the chat message)
+                      "message": %s
                     }
                     """, token, username, uuid, message));
         });
@@ -79,7 +79,7 @@ public class APIClient implements ClientModInitializer {
                       "wsToken": %s,
                       "username": %s,
                       "uuid": %s,
-                      "message": %s (the chat message)
+                      "message": %s
                     }
                     """, token, username, uuid, message));
         }));
