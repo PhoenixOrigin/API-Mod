@@ -77,6 +77,6 @@ public class APIClient implements ClientModInitializer {
                   "uuid": %s,
                   "message": %s
                 }
-                """, token, username, uuid, message.getString()));
+                """, token, username, uuid, message.copy().toString()));
     }
 }
