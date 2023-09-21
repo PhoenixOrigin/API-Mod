@@ -11,7 +11,7 @@ public class PostCommand {
         return 0;
     }
 
-    public LiteralArgumentBuilder<FabricClientCommandSource> build(){
+    public LiteralArgumentBuilder<FabricClientCommandSource> build() {
         return ClientCommandManager.literal("post").executes(this::execute);
     }
 

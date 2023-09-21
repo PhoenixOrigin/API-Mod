@@ -2,9 +2,6 @@ package net.phoenix.api;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.phoenix.api.commands.GetCommand;
 import net.phoenix.api.commands.PostCommand;
 import net.phoenix.api.utils.SimpleConfig;

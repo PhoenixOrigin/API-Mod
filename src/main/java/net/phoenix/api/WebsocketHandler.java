@@ -1,19 +1,24 @@
 package net.phoenix.api;
 
-import java.io.IOException;
+import javax.websocket.*;
 import java.net.URI;
 import java.nio.ByteBuffer;
-import javax.websocket.*;
 
 @ClientEndpoint
 public class WebsocketHandler {
 
+    private final URI endpointURI;
     Session userSession = null;
     private MessageHandler messageHandler;
-    private final URI endpointURI;
 
-    public WebsocketHandler (URI endpointURI) {
+    public WebsocketHandler(URI endpointURI) {
         this.endpointURI = endpointURI;
+    }
+
+    /**
+     * Connect to websocket
+     */
+    public void connect(){
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, this.endpointURI);
@@ -37,19 +42,13 @@ public class WebsocketHandler {
      * Callback hook for Connection close events.
      *
      * @param userSession the userSession which is getting closed.
-     * @param reason the reason for connection close
+     * @param reason      the reason for connection close
      */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
         System.out.println("closing websocket");
         this.userSession = null;
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        try {
-            container.connectToServer(this, endpointURI);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        connect();
     }
 
     /**
