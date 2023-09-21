@@ -27,8 +27,7 @@ public class GetCommand {
             String path = ctx.getArgument("path", String.class);
             if (RequestHandler.isUrl(path)) {
                 System.out.println("working");
-                RequestHandler.get(path, player, uuid, response -> {
-                    String res = response.getAsString();
+                RequestHandler.get(path, player, uuid, res -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
                         client.player.sendMessage(Text.literal(res));
@@ -36,8 +35,7 @@ public class GetCommand {
                 });
             } else {
                 String url = API.config.get("url") + path;
-                RequestHandler.get(url, player, uuid, response -> {
-                    String res = response.getAsString();
+                RequestHandler.get(url, player, uuid, res -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.execute(() -> {
                         client.player.sendMessage(Text.literal(res));
@@ -46,8 +44,7 @@ public class GetCommand {
             }
         } catch (IllegalArgumentException ignored) {
             String url = API.config.get("url");
-            RequestHandler.get(url, player, uuid, response -> {
-                String res = response.getAsString();
+            RequestHandler.get(url, player, uuid, res -> {
                 MinecraftClient client = MinecraftClient.getInstance();
                 client.execute(() -> {
                     client.player.sendMessage(Text.literal(res));
