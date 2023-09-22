@@ -70,7 +70,7 @@ public class APIClient implements ClientModInitializer {
     }
 
     private void handleText(Text message) {
-        if (websocket.dc) return;
+        if (websocket.isClosed()) return;
 
         String token = config.get("token");
         MinecraftClient client = MinecraftClient.getInstance();
