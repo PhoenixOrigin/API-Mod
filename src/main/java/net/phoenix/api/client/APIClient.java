@@ -63,9 +63,12 @@ public class APIClient implements ClientModInitializer {
 
         ClientSendMessageEvents.CHAT.register((message) -> handleText(Text.literal(message)));
         ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> handleText(message)));
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (overlay) return;
+        ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            if (overlay) {
+                return true;
+            }
             handleText(message);
+            return true;
         });
     }
 
