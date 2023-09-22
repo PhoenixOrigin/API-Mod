@@ -63,7 +63,14 @@ public class APIClient implements ClientModInitializer {
 
         ClientSendMessageEvents.CHAT.register((message) -> handleText(Text.literal(message)));
         ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> handleText(message)));
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> handleText(message));
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (overlay) return;
+            handleText(message);
+        });
+        ClientReceiveMessageEvents.GAME_CANCELED.register(((message, overlay) -> {
+            if (overlay) return;
+            handleText(message);
+        }));
     }
 
     private void handleText(Text message) {
@@ -78,7 +85,7 @@ public class APIClient implements ClientModInitializer {
         obj.addProperty("wsToken", token);
         obj.addProperty("username", username);
         obj.addProperty("uuid", uuid);
-        obj.addProperty("message", message.copy().toString());
+        obj.addProperty("message", message.getString().replace("\n", "\\n"));
 
         websocket.send(obj.toString());
     }

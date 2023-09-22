@@ -7,7 +7,11 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.phoenix.api.WebsocketHandler;
 import net.phoenix.api.client.APIClient;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
@@ -26,6 +30,14 @@ public class WebsocketCommand {
 
     private int connect(CommandContext<FabricClientCommandSource> ctx) {
         APIClient.websocket.dc = false;
+        URI uri = null;
+        try {
+            uri = new URI(APIClient.config.get("ws-url"));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        APIClient.websocket = new WebsocketHandler(uri);
+        APIClient.websocket.connect();
         APIClient.websocket.connect();
         return 0;
     }
