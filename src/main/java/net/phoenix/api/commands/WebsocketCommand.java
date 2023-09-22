@@ -38,7 +38,22 @@ public class WebsocketCommand {
         }
         APIClient.websocket = new WebsocketHandler(uri);
         APIClient.websocket.connect();
-        APIClient.websocket.connect();
+        APIClient.websocket.setMessageHandler(new WebsocketHandler.MessageHandler() {
+            @Override
+            public void handleMessage(String message) {
+                MinecraftClient client = MinecraftClient.getInstance();
+                if (message.equals("$SERVERPING")) {
+                    APIClient.websocket.send("$CLIENTPONG");
+                    return;
+                }
+                client.execute(() -> {
+                    try {
+                        client.player.sendMessage(Text.literal(message));
+                    } catch (NullPointerException ignored) {
+                    }
+                });
+            }
+        });
         return 0;
     }
 
