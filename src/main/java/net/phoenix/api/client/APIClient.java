@@ -1,6 +1,5 @@
 package net.phoenix.api.client;
 
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -77,12 +76,13 @@ public class APIClient implements ClientModInitializer {
         String username = client.player.getName().getString();
         String uuid = client.player.getUuidAsString();
 
-        JsonObject obj = new JsonObject();
-        obj.addProperty("wsToken", token);
-        obj.addProperty("username", username);
-        obj.addProperty("uuid", uuid);
-        obj.addProperty("message", message.copy().toString());
-
-        websocket.send(obj.getAsString());
+        websocket.send(String.format("""
+                {
+                  "wsToken": "%s",
+                  "username": "%s",
+                  "uuid": "%s",
+                  "message": "%s"
+                }
+                """, token, username, uuid, message.copy().toString()));
     }
 }
