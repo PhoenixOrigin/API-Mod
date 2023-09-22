@@ -80,6 +80,6 @@ public class APIClient implements ClientModInitializer {
         obj.addProperty("uuid", uuid);
         obj.addProperty("message", message.copy().toString());
 
-        websocket.send(obj.getAsString());
+        websocket.send(obj.toString());
     }
 }

@@ -36,7 +36,7 @@ public class WebsocketCommand {
     }
 
 
-    public LiteralArgumentBuilder<FabricClientCommandSource> build() {
+    public LiteralArgumentBuilder<FabricClientCommandSource> build(){
         return literal("websocket")
                 .then(literal("terminate").executes(this::terminate))
                 .then(literal("send")
@@ -45,6 +45,7 @@ public class WebsocketCommand {
                 .then(literal("connect").executes(this::connect))
                 .executes(this::execute);
     }
+
 
 
 }
