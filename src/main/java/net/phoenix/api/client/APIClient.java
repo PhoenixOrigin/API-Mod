@@ -1,5 +1,6 @@
 package net.phoenix.api.client;
 
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -8,7 +9,6 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.text.Text;
 import net.phoenix.api.WebsocketHandler;
 import net.phoenix.api.commands.GetCommand;
@@ -63,9 +63,7 @@ public class APIClient implements ClientModInitializer {
 
         ClientSendMessageEvents.CHAT.register((message) -> handleText(Text.literal(message)));
         ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> handleText(message)));
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            handleText(message);
-        });
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> handleText(message));
     }
 
     private void handleText(Text message) {
@@ -76,13 +74,12 @@ public class APIClient implements ClientModInitializer {
         String username = client.player.getName().getString();
         String uuid = client.player.getUuidAsString();
 
-        websocket.send(String.format("""
-                {
-                  "wsToken": "%s",
-                  "username": "%s",
-                  "uuid": "%s",
-                  "message": "%s"
-                }
-                """, token, username, uuid, message.copy().toString()));
+        JsonObject obj = new JsonObject();
+        obj.addProperty("wsToken", token);
+        obj.addProperty("username", username);
+        obj.addProperty("uuid", uuid);
+        obj.addProperty("message", message.copy().toString());
+
+        websocket.send(obj.getAsString());
     }
 }
