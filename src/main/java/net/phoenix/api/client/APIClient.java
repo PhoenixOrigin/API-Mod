@@ -37,29 +37,7 @@ public class APIClient implements ClientModInitializer {
         });
 
         config = SimpleConfig.of("httpconfig/settings").request();
-        try {
-            URI uri = new URI(config.get("ws-url"));
-            websocket = new WebsocketHandler(uri);
-            websocket.connect();
-            websocket.setMessageHandler(new WebsocketHandler.MessageHandler() {
-                @Override
-                public void handleMessage(String message) {
-                    MinecraftClient client = MinecraftClient.getInstance();
-                    if (message.equals("$SERVERPING")) {
-                        websocket.send("$CLIENTPONG");
-                        return;
-                    }
-                    client.execute(() -> {
-                        try {
-                            client.player.sendMessage(Text.literal(message));
-                        } catch (NullPointerException ignored) {
-                        }
-                    });
-                }
-            });
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        connectWebsocket();
 
         ClientReceiveMessageEvents.CHAT.register(((message, signedMessage, sender, params, receptionTimestamp) -> handleText(message)));
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
@@ -87,5 +65,31 @@ public class APIClient implements ClientModInitializer {
         obj.addProperty("message", message.getString().replace("\n", "\\n"));
 
         websocket.send(obj.toString());
+    }
+
+    public static void connectWebsocket(){
+        try {
+            URI uri = new URI(config.get("ws-url"));
+            websocket = new WebsocketHandler(uri);
+            websocket.connect();
+            websocket.setMessageHandler(new WebsocketHandler.MessageHandler() {
+                @Override
+                public void handleMessage(String message) {
+                    MinecraftClient client = MinecraftClient.getInstance();
+                    if (message.equals("$SERVERPING")) {
+                        websocket.send("$CLIENTPONG");
+                        return;
+                    }
+                    client.execute(() -> {
+                        try {
+                            client.player.sendMessage(Text.literal(message));
+                        } catch (NullPointerException ignored) {
+                        }
+                    });
+                }
+            });
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

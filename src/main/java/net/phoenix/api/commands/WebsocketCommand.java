@@ -30,30 +30,7 @@ public class WebsocketCommand {
 
     private int connect(CommandContext<FabricClientCommandSource> ctx) {
         APIClient.websocket.dc = false;
-        URI uri = null;
-        try {
-            uri = new URI(APIClient.config.get("ws-url"));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        APIClient.websocket = new WebsocketHandler(uri);
-        APIClient.websocket.connect();
-        APIClient.websocket.setMessageHandler(new WebsocketHandler.MessageHandler() {
-            @Override
-            public void handleMessage(String message) {
-                MinecraftClient client = MinecraftClient.getInstance();
-                if (message.equals("$SERVERPING")) {
-                    APIClient.websocket.send("$CLIENTPONG");
-                    return;
-                }
-                client.execute(() -> {
-                    try {
-                        client.player.sendMessage(Text.literal(message));
-                    } catch (NullPointerException ignored) {
-                    }
-                });
-            }
-        });
+        APIClient.connectWebsocket();
         return 0;
     }
 
