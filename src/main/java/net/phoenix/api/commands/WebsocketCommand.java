@@ -8,11 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import net.phoenix.api.WebsocketHandler;
 import net.phoenix.api.client.APIClient;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
@@ -37,7 +33,8 @@ public class WebsocketCommand {
 
     private int terminate(CommandContext<FabricClientCommandSource> ctx) {
         if(APIClient.websocket.isClosed()) {
-            MinecraftClient.getInstance().player.sendMessage(Text.literal("You are already connected to the server!"));
+            MinecraftClient.getInstance().player.sendMessage(Text.literal("You are already disconnected the server!"));
+            return 0;
         }
         APIClient.websocket.dc = true;
         APIClient.websocket.close();
@@ -47,6 +44,7 @@ public class WebsocketCommand {
     private int connect(CommandContext<FabricClientCommandSource> ctx) {
         if(APIClient.websocket.isOpen()) {
             MinecraftClient.getInstance().player.sendMessage(Text.literal("You are already connected to the server!"));
+            return 0;
         }
         APIClient.websocket.dc = false;
         APIClient.connectWebsocket();
