@@ -14,6 +14,7 @@ public class War {
     private TerritoryDefenses start;
     private TerritoryDefenses end;
     private long startTime;
+    private long endTime;
     Pattern warBossBar = Pattern.compile("\\[([A-Z,a-z]{3,4})\\] ([A-Z,a-z ]*) - ❤ ([0-9]*) \\(([0-9,.,%]*)\\) - ☠ ([0-9]*)-([0-9]*) \\(([0-9,.]*)");
 
 
