@@ -31,3 +31,4 @@ jobs:
         with:
           name: API-Mod
           path: build/libs/API-Mod-*.jar
+          path: build/libs/API-Mod-*.jar
