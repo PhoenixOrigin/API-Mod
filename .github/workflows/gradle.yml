@@ -1,4 +1,4 @@
-name: Build & Release
+name: Build Mod
 
 on: push
 
@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source code
+      - name: Pull source
         uses: actions/checkout@v3
 
       - name: Set up JDK
@@ -15,13 +15,19 @@ jobs:
           distribution: "temurin"
           java-version: 17
 
-      - name: Build with Gradle
+      - name: Gradle 1.19 build
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: release-candidate
-          arguments: build
+          arguments: build -Pmc_version=1.19.4
+
+      - name: Gradle 1.20 build
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: release-candidate
+          arguments: build -Pmc_version=1.20.2
 
       - uses: actions/upload-artifact@v3
         with:
           name: API-Mod
-          path: build/libs/API-?.?-*.jar
+          path: build/libs/API-Mod-*.jar
