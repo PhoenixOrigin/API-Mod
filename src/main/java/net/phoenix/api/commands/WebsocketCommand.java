@@ -10,6 +10,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.phoenix.api.client.APIClient;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class WebsocketCommand {
@@ -90,13 +95,10 @@ public class WebsocketCommand {
         return literal("websocket")
                 .then(literal("terminate").executes(this::terminate))
                 .then(literal("send")
-                        .then(RequiredArgumentBuilder.argument("content", StringArgumentType.greedyString()))
-                        .executes(this::send))
+                        .then(argument("content", StringArgumentType.greedyString()).executes(this::send)))
                 .then(literal("command")
-                        .then(RequiredArgumentBuilder.argument("content", StringArgumentType.greedyString()))
-                        .executes(this::command))
+                        .then(argument("content", StringArgumentType.greedyString()).executes(this::send)))
                 .then(literal("connect").executes(this::connect))
-                .then(RequiredArgumentBuilder.argument("content", StringArgumentType.greedyString()))
                 .executes(this::execute);
     }
 
