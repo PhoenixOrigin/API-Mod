@@ -30,5 +30,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: API-Mod
-          path: build/libs/API-Mod-*.jar
-          path: build/libs/API-Mod-*.jar
+          path: build/libs/API-Mod-1.19.4.jar
+      - uses: actions/upload-artifact@v3
+        with:
+          name: API-Mod
+          path: build/libs/API-Mod-1.20.2.jar
